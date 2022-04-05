@@ -24,13 +24,10 @@ namespace WebWeather.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private readonly DataWeatherContext _dataWeatherContext;
-
-        private readonly IWebHostEnvironment _appEnvironment;
-        public HomeController(ILogger<HomeController> logger, DataWeatherContext dataWeatherContext, IWebHostEnvironment appEnvironment)
+        public HomeController(ILogger<HomeController> logger, DataWeatherContext dataWeatherContext)
         {
             _logger = logger;
             _dataWeatherContext = dataWeatherContext;
-            _appEnvironment = appEnvironment;
         }
 
         public IActionResult Index()
@@ -41,13 +38,22 @@ namespace WebWeather.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFile(IFormFileCollection uploads)
         {
-            var repository = new Repository<Weather,int>(_dataWeatherContext);
+            try
+            {
+                _logger.LogInformation($"Controller{nameof(HomeController)}. Старт загрузки файлов в бд.");
+                var repository = new Repository<Weather, int>(_dataWeatherContext);
 
-            var service = new WeatherService(repository);
+                var service = new WeatherService(repository);
 
-            await service.LoadExcelWithWeatherToDb(uploads);
+                await service.LoadExcelWithWeatherToDb(uploads);
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Controller{nameof(HomeController)}.Error: {ex.Message}.");
+                RedirectToAction("Index");
+            }
         }
 
         public async Task<IActionResult> Weathers(int? year, int? month, int page = 1,

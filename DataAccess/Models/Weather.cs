@@ -3,7 +3,7 @@
 namespace WebWeather.DataAccess.Models
 {
     /// <summary>
-    /// Погода по дате и времени
+    /// Табличный объект сущности "Погода"
     /// </summary>
     public class Weather:Entity<int>
     {
