@@ -90,8 +90,6 @@ namespace WebWeather.Controllers
         {
             foreach (var uploadedFile in uploads)
             {
-                // путь к папке Files
-                string path = "/Files/" + uploadedFile.FileName;
                 using (var stream = uploadedFile.OpenReadStream())
                 {
                     var excelBook = new XSSFWorkbook(stream);
