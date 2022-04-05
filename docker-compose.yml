@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  webweather:
+    image: ${DOCKER_REGISTRY-}webweather
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+        - dockerlocal   
+  postgres:
+    build:
+        context: ./Images/postgres
+    container_name: 'Postgres'
+    hostname: local.postgres.ru
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+        - 5432:5432
+    networks:
+        - dockerlocal
+networks:
+  dockerlocal:
+    name: dockerlocal
+    driver: bridge
