@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebWeather.Data.WeatherProvider;
+using WebWeather.DataAccess.Models;
 
 namespace WebWeather.Models
 {

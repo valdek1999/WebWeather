@@ -1,14 +1,12 @@
 ﻿using System;
 
-namespace WebWeather.Data.WeatherProvider
+namespace WebWeather.DataAccess.Models
 {
     /// <summary>
     /// Погода по дате и времени
     /// </summary>
-    public class Weather
+    public class Weather:Entity<int>
     {
-        public int Id { get; set; }
-
         /// <summary>
         /// Дата
         /// </summary>

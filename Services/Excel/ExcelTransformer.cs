@@ -2,13 +2,12 @@
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.Collections.Generic;
-using WebWeather.Services.Interfaces;
 
 namespace WebWeather.Services
 {
-    public class ExcelTransformer : IExcelTransformer
+    public static class ExcelTransformer
     {
-        IEnumerable<IWorkbook> IExcelTransformer.TransformFilesToExcelFormat(IFormFileCollection files)
+        public static IEnumerable<IWorkbook> TransformFilesToExcel(IFormFileCollection files)
         {
             foreach (var file in files)
             {

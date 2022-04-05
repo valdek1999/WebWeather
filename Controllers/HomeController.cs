@@ -8,12 +8,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WebWeather.Data.WeatherProvider;
 using WebWeather.Models;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using WebWeather.Extensions;
 using Microsoft.EntityFrameworkCore;
+using WebWeather.DataAccess;
+using WebWeather.DataAccess.Models;
+using WebWeather.Services;
 
 namespace WebWeather.Controllers
 {
@@ -34,6 +36,18 @@ namespace WebWeather.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFile(IFormFileCollection uploads)
+        {
+            var repository = new Repository<Weather,int>(_dataWeatherContext);
+
+            var service = new WeatherService(repository);
+
+            await service.LoadExcelWithWeatherToDb(uploads);
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Weathers(int? year, int? month, int page = 1,
@@ -83,33 +97,6 @@ namespace WebWeather.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddFile(IFormFileCollection uploads)
-        {
-            foreach (var uploadedFile in uploads)
-            {
-                using (var stream = uploadedFile.OpenReadStream())
-                {
-                    var excelBook = new XSSFWorkbook(stream);
-
-                    foreach(var sheet in excelBook)
-                    {
-                        var sheetValided = sheet.CheckValidOfSheet();
-                        if (sheetValided)
-                        {
-                            foreach(var weatherData in sheet.GetWeatherDataEnumerator())
-                            {
-                                await _dataWeatherContext.AddAsync(weatherData);
-                            }
-                        }
-                        await _dataWeatherContext.SaveChangesAsync();
-                    }
-                }
-            }
-
-            return RedirectToAction("Index");
         }
     }
 }

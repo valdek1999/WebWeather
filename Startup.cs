@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebWeather.Data.WeatherProvider;
+using WebWeather.DataAccess;
 
 namespace WebWeather
 {

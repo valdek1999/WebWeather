@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
+using WebWeather.DataAccess.Models;
 
-namespace WebWeather.Data.WeatherProvider
+namespace WebWeather.DataAccess
 {
     public class DataWeatherContext: DbContext
     {
