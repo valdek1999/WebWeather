@@ -24,7 +24,9 @@ namespace WebWeather.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private readonly DataWeatherContext _dataWeatherContext;
-        public HomeController(ILogger<HomeController> logger, DataWeatherContext dataWeatherContext)
+
+        private readonly WeatherService _weatherService;
+        public HomeController(ILogger<HomeController> logger, DataWeatherContext dataWeatherContext, WeatherService weatherService)
         {
             _logger = logger;
             _dataWeatherContext = dataWeatherContext;
@@ -40,12 +42,7 @@ namespace WebWeather.Controllers
         {
             try
             {
-                _logger.LogInformation($"Controller{nameof(HomeController)}. Старт загрузки файлов в бд.");
-                var repository = new Repository<Weather, int>(_dataWeatherContext);
-
-                var service = new WeatherService(repository);
-
-                var isLoad = await service.LoadExcelWithWeatherToDb(uploads);
+                var isLoad = await _weatherService.LoadExcelWithWeatherToDb(uploads);
                 if (isLoad)
                 {
                     _logger.LogInformation($"Controller{nameof(HomeController)}. Загрузка файлов в бд успешно завершилась.");
@@ -53,7 +50,7 @@ namespace WebWeather.Controllers
                 }
                 else
                 {
-                    foreach(var error in service.ExcelWeatherHandler.WeatherErrors)
+                    foreach(var error in _weatherService.ExcelWeatherHandler.WeatherErrors)
                     {
                         ModelState.AddModelError($"Ошибка в ячейке {error.TypeCell}", $"Лист:{error.Sheet}; Строка:{error.Row}; Столбец:{error.Column};");
                     }
@@ -62,7 +59,6 @@ namespace WebWeather.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Controller{nameof(HomeController)}. Error: {ex.Message}.");
                 return StatusCode(500);
             }

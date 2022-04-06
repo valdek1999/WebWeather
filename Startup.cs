@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebWeather.DataAccess;
+using WebWeather.DataAccess.Models;
+using WebWeather.Services;
 
 namespace WebWeather
 {
@@ -64,6 +66,8 @@ namespace WebWeather
         {
             string connection = configuration.GetConnectionString("DataWeatherContext");
             services.AddDbContext<DataWeatherContext>(options => options.UseNpgsql(connection));
+            services.AddSingleton<Repository<Weather, int>>();
+            services.AddTransient<WeatherService>();
         }
     }
 }
