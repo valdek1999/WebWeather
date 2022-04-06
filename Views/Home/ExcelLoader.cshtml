@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Страница с загрузкой эксель файлов";
+    ViewData["Title"] = "Загрузка эксель файлов с погодой";
 }
 
 
-<div class="text-center">
-    <h1 class="display-4">Добро пожаловать</h1>
+<div class="text-center loader-weather">
+    <h1></h1>
     <div>
         <button id="upload-btn" class="drag-and-drop">
         <h3 class="drag-and-drop-title">
@@ -13,8 +13,6 @@
         </button>
     </div>    
     
-    
-
     <form name="addfiles" asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
     <input type="file" name="uploads" id="upload-file" hidden="hidden" accept=".xlsx" multiple/>
     </form>
