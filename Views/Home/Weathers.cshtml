@@ -1,22 +1,29 @@
 ﻿@using WebWeather.DataAccess.Models
 @using WebWeather.Models
-@model IndexViewModel
+@model WeathersViewModel
  
 @{
     ViewData["Title"] = "Погода в Москве по датам";
 }
 <h1>Погода в Москве по датам</h1>
+<div class="filter-weather">
 <form method="get">
     <div class="form-inline">
         <label>Год: </label>
-        <select name="year" asp-items="Model.FilterViewModel.Years" class="form-control"></select>
+        <select name="year" asp-items="Model.FilterViewModel.Years" class="form-control">@Model.FilterViewModel.SelectedYear</select>
          
         <label>Месяц: </label>
-        <select name="month" asp-items="Model.FilterViewModel.Mouth" class="form-control"></select>
+        <select name="month" asp-items="Model.FilterViewModel.Mouth" class="form-control">@Model.FilterViewModel.SelectedMouth</select>
  
         <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
     </div>
 </form>
+<form method="get">
+    <div class="form-inline"> 
+        <input type="submit" value="Отменить фильтр" class="btn btn-outline-dark" />
+    </div>
+</form>
+</div>
  
 <table class="table">
     <tr>

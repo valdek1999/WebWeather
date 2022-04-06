@@ -1,7 +1,7 @@
 ﻿this.dragAndDrop = document.querySelector('.drag-and-drop');
 this.uploadBtn = document.getElementById('upload-btn');
 this.uploadExplorer = document.getElementById('upload-file');
-this.files;
+this.files = null;
 
 this.uploadBtn.addEventListener('click', () => {
     this.uploadExplorer.click();
@@ -43,10 +43,11 @@ function readFile(file){
 
 function sendContract(){
     var formdata = new FormData(document.forms.addfiles);
-    var i = 0, len = this.files.length, file;
-    if (len == 0) {
+    if (files == null) {
         alert(`Загрузите файлы перед отправкой`);
     }
+    var i = 0, len = this.files.length, file;
+    
     for (; i < len; i++) {
         file = this.files[i];
         formdata.append("uploads", file);

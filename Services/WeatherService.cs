@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
-using NPOI.SS.UserModel;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebWeather.DataAccess;
 using WebWeather.DataAccess.Models;
-using WebWeather.Extensions;
 namespace WebWeather.Services
 {
     public class WeatherService
     {
         private readonly Repository<Weather, int> _dataWeatherRepository;
         public ExcelWeatherHandler ExcelWeatherHandler { get; }
-        public WeatherService(Repository<Weather,int> dataWeatherRepository)
+        public WeatherService(DataWeatherContext dataWeatherContext)
         {
-            _dataWeatherRepository = dataWeatherRepository;
+            _dataWeatherRepository = new Repository<Weather, int>(dataWeatherContext);
             ExcelWeatherHandler = new ExcelWeatherHandler();
         }
 

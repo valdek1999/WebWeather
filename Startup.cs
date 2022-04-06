@@ -56,7 +56,7 @@ namespace WebWeather
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=ExcelLoader}/{id?}");
             });
         }
     }
@@ -65,9 +65,8 @@ namespace WebWeather
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             string connection = configuration.GetConnectionString("DataWeatherContext");
-            services.AddDbContext<DataWeatherContext>(options => options.UseNpgsql(connection));
-            services.AddSingleton<Repository<Weather, int>>();
-            services.AddTransient<WeatherService>();
+            services.AddDbContext<DataWeatherContext>(options => options.UseNpgsql(connection), ServiceLifetime.Singleton);
+            services.AddScoped<WeatherService>();
         }
     }
 }

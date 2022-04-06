@@ -3,7 +3,7 @@ using WebWeather.DataAccess.Models;
 
 namespace WebWeather.Models
 {
-    public class IndexViewModel
+    public class WeathersViewModel
     {
         public IEnumerable<Weather> Weathers { get; set; }
         public PageViewModel PageViewModel { get; set; }

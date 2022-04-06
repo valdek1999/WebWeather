@@ -2,10 +2,7 @@
 using WebWeather.Models.Excel;
 using NPOI.SS.UserModel;
 using System;
-using System.Globalization;
 using WebWeather.DataAccess.Models;
-using WebWeather.Models;
-using WebWeather.Services;
 using WebWeather.Extensions;
 
 namespace WebWeather.Services
@@ -42,7 +39,7 @@ namespace WebWeather.Services
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private Weather GetWeatherData(IRow row)
+        private static Weather GetWeatherData(IRow row)
         {
             var date = row.GetCellFromRowByType(WeatherCell.Date).GetDateFromCell().Value;
             var time = row.GetCellFromRowByType(WeatherCell.Time).GetTimeFromCell().Value;
@@ -69,7 +66,7 @@ namespace WebWeather.Services
         /// <param name="sheet"></param>
         /// <param name="sheetIsValid"></param>
         /// <returns></returns>
-        private int SearchOfStartingRowBySheet(ISheet sheet)
+        private static int SearchOfStartingRowBySheet(ISheet sheet)
         {
             for (int i = 0; i < sheet.LastRowNum; i++)
             {
@@ -88,7 +85,7 @@ namespace WebWeather.Services
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private List<ExcelError> SearchErrorsInRow(IRow row)
+        private static List<ExcelError> SearchErrorsInRow(IRow row)
         {
             var cellTypes = Enum.GetValues<WeatherCell>();
             var excelErrors = new List<ExcelError>();
@@ -101,7 +98,7 @@ namespace WebWeather.Services
                 var cell = row.GetCellFromRowByType(cellType);
                 if (cell.CheckValid(cellType) is false)
                 {
-                    ExcelError excelError = new ExcelError()
+                    ExcelError excelError = new()
                     {
                         Message = $"Ошибка в ячейке типа {cellType}. Лист {cell.Sheet.SheetName}. Строка: {cell.RowIndex+1}, столбец: {cell.ColumnIndex+1}",
                         Sheet = cell.Sheet.SheetName,

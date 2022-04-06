@@ -40,7 +40,7 @@ namespace WebWeather.DataAccess.Models
         /// <summary>
         /// Направление ветра
         /// </summary>
-        public string? WindDirection { get; set; }
+        public string WindDirection { get; set; }
 
         /// <summary>
         /// Скорость ветра в м/с
@@ -60,11 +60,11 @@ namespace WebWeather.DataAccess.Models
         /// <summary>
         /// Горизонтальная видимость
         /// </summary>
-        public string? HorizontalVisibility { get; set; }
+        public string HorizontalVisibility { get; set; }
 
         /// <summary>
         /// Погодные явления
         /// </summary>
-        public string? WeatherEvent { get; set; }
+        public string WeatherEvent { get; set; }
     }
 }

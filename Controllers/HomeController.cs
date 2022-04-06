@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebWeather.Models;
-using NPOI.XSSF.UserModel;
-using NPOI.SS.UserModel;
-using WebWeather.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WebWeather.DataAccess;
 using WebWeather.DataAccess.Models;
@@ -30,9 +24,10 @@ namespace WebWeather.Controllers
         {
             _logger = logger;
             _dataWeatherContext = dataWeatherContext;
+            _weatherService = weatherService;
         }
 
-        public IActionResult Index()
+        public IActionResult ExcelLoader()
         {
             return View();
         }
@@ -99,11 +94,11 @@ namespace WebWeather.Controllers
                 var items = await weather.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
                 // формируем модель представления
-                IndexViewModel viewModel = new IndexViewModel
+                WeathersViewModel viewModel = new WeathersViewModel
                 {
                     PageViewModel = new PageViewModel(count, page, pageSize),
                     SortViewModel = new SortViewModel(sortOrder),
-                    FilterViewModel = new FilterViewModel(_dataWeatherContext.Weather.ToList(), month, year),
+                    FilterViewModel = new FilterViewModel(month, year),
                     Weathers = items
                 };
                 return View(viewModel);

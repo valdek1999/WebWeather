@@ -1,11 +1,7 @@
 ﻿using NPOI.SS.UserModel;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using WebWeather.DataAccess.Models;
-using WebWeather.Models;
 using WebWeather.Models.Excel;
-using WebWeather.Services;
 
 namespace WebWeather.Extensions
 {
@@ -91,7 +87,7 @@ namespace WebWeather.Extensions
                 case WeatherCell.Date:
                     return DateTime.TryParseExact(cell.ToString().Trim(), "dd.MM.yyyy", new CultureInfo("ru-Ru"), DateTimeStyles.AssumeLocal, out _);
                 case WeatherCell.Time:
-                    return DateTime.TryParseExact(cell.ToString().Trim(), "H:m", new CultureInfo("ru-Ru"), DateTimeStyles.AssumeLocal, out var time);
+                    return DateTime.TryParseExact(cell.ToString().Trim(), "H:m", new CultureInfo("ru-Ru"), DateTimeStyles.AssumeLocal, out var _);
                 case WeatherCell.AirTemperature:
                 case WeatherCell.DewPointTemperature:
                 case WeatherCell.AirHumidity:
