@@ -44,11 +44,27 @@ function readFile(file){
 function sendContract(){
     var formdata = new FormData(document.forms.addfiles);
     var i = 0, len = this.files.length, file;
+    if (len == 0) {
+        alert(`Загрузите файлы перед отправкой`);
+    }
     for (; i < len; i++) {
         file = this.files[i];
         formdata.append("uploads", file);
     }
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/Home/AddFile");
-    xhr.send(formdata);
+
+    setInterval(
+        function send() {
+            xhr.send(formdata);
+
+            xhr.onload = function () {
+                if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+                    alert(`${xhr.responseText}.`); // Например, 404: Not Found
+                } else { // если всё прошло гладко, выводим результат
+                    alert(`Эксель файлы успешно загружены`); // response -- это ответ сервера
+                }
+            };
+        }, 1000)
+    alert(`Эксель файлы загружаются`);
 }

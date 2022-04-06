@@ -45,58 +45,77 @@ namespace WebWeather.Controllers
 
                 var service = new WeatherService(repository);
 
-                await service.LoadExcelWithWeatherToDb(uploads);
-
-                return RedirectToAction("Index");
+                var isLoad = await service.LoadExcelWithWeatherToDb(uploads);
+                if (isLoad)
+                {
+                    _logger.LogInformation($"Controller{nameof(HomeController)}. Загрузка файлов в бд успешно завершилась.");
+                    return Ok();
+                }
+                else
+                {
+                    foreach(var error in service.ExcelWeatherHandler.WeatherErrors)
+                    {
+                        ModelState.AddModelError($"Ошибка в ячейке {error.TypeCell}", $"Лист:{error.Sheet}; Строка:{error.Row}; Столбец:{error.Column};");
+                    }
+                    return BadRequest(ModelState);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Controller{nameof(HomeController)}.Error: {ex.Message}.");
-                RedirectToAction("Index");
+
+                _logger.LogError($"Controller{nameof(HomeController)}. Error: {ex.Message}.");
+                return StatusCode(500);
             }
         }
 
         public async Task<IActionResult> Weathers(int? year, int? month, int page = 1,
             SortState sortOrder = SortState.DateAsc)
         {
-            int pageSize = 10;
-
-            //фильтрация
-            IQueryable<Weather> weather = _dataWeatherContext.Weather;
-
-            if (year != null)
+            try
             {
-                weather = weather.Where(w => w.Date.Year == year);
+                int pageSize = 10;
+
+                //фильтрация
+                IQueryable<Weather> weather = _dataWeatherContext.Weather;
+
+                if (year != null)
+                {
+                    weather = weather.Where(w => w.Date.Year == year);
+                }
+                if (month != null)
+                {
+                    weather = weather.Where(w => w.Date.Month == month);
+                }
+
+                //сортировка
+                switch (sortOrder)
+                {
+                    case SortState.DateAsc:
+                        weather = weather.OrderBy(w => w.Date).ThenBy(w => w.Time);
+                        break;
+                    case SortState.DateDesc:
+                        weather = weather.OrderByDescending(w => w.Date).ThenByDescending(w => w.Time);
+                        break;
+                }
+
+                // пагинация
+                var count = await weather.CountAsync();
+                var items = await weather.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                // формируем модель представления
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = new PageViewModel(count, page, pageSize),
+                    SortViewModel = new SortViewModel(sortOrder),
+                    FilterViewModel = new FilterViewModel(_dataWeatherContext.Weather.ToList(), month, year),
+                    Weathers = items
+                };
+                return View(viewModel);
             }
-            if (month != null)
+            catch(Exception ex)
             {
-                weather = weather.Where(w => w.Date.Month == month);
+                return RedirectToAction("Error");
             }
-
-            //сортировка
-            switch (sortOrder)
-            {
-                case SortState.DateAsc:
-                    weather = weather.OrderBy(w => w.Date).ThenBy(w => w.Time);
-                    break;
-                case SortState.DateDesc:
-                    weather = weather.OrderByDescending(w => w.Date).ThenByDescending(w => w.Time);
-                    break;
-            }
-
-            // пагинация
-            var count = await weather.CountAsync();
-            var items = await weather.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            // формируем модель представления
-            IndexViewModel viewModel = new IndexViewModel
-            {
-                PageViewModel = new PageViewModel(count, page, pageSize),
-                SortViewModel = new SortViewModel(sortOrder),
-                FilterViewModel = new FilterViewModel(_dataWeatherContext.Weather.ToList(), month, year),
-                Weathers = items
-            };
-            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

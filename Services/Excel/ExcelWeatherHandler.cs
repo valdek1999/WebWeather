@@ -28,6 +28,8 @@ namespace WebWeather.Services
                 var row = sheet.GetRow(i);
                 if (row.CheckValid() is false)
                 {
+                    var erros = SearchErrorsInRow(row);
+                    WeatherErrors.AddRange(erros);
                     HasSomeError = true;
                     break;
                 }
@@ -79,6 +81,39 @@ namespace WebWeather.Services
                 }
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Поиск всех ошибок в строке
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private List<ExcelError> SearchErrorsInRow(IRow row)
+        {
+            var cellTypes = Enum.GetValues<WeatherCell>();
+            var excelErrors = new List<ExcelError>();
+            foreach (var cellType in cellTypes)
+            {
+                if (row.Cells.Count <= (int)cellType)
+                {
+                    break;
+                }
+                var cell = row.GetCellFromRowByType(cellType);
+                if (cell.CheckValid(cellType) is false)
+                {
+                    ExcelError excelError = new ExcelError()
+                    {
+                        Message = $"Ошибка в ячейке типа {cellType}. Лист {cell.Sheet.SheetName}. Строка: {cell.RowIndex+1}, столбец: {cell.ColumnIndex+1}",
+                        Sheet = cell.Sheet.SheetName,
+                        Column = cell.ColumnIndex+1,
+                        Row = cell.RowIndex+1,
+                        Type = TypeExcelFile.Weather,
+                        TypeCell = cellType
+                    };
+                    excelErrors.Add(excelError);
+                }
+            }
+            return excelErrors;
         }
     }
 }
