@@ -14,5 +14,7 @@ WebWeather сервис для загрузки и отображения экс
 -----------------
 Для локального запуска в docker-е, необходимо:  
 1)С помощью терминала перейти в папку с проектом WebWeather  
-2)Запустить команду: docker-compose -f "docker-compose.yml" up -d --build  
-3)Либо открыть решение в VisualStudio и запустить проект с помощью docker-compose.   
+2)Запустить команду: docker-compose -f "docker-compose.yml" up -d --build 
+3)Перейти по локальному хосту http://localhost:5234/ или http://localhost:5233/
+Или:   
+1)Открыть решение в VisualStudio и запустить проект с помощью профиля docker-compose.
