@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Mobile.FrontEcosystem.Setup
+namespace WebWeather.Setup
 {
     public static class SettingsExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Mobile.FrontEcosystem.Setup
+﻿namespace WebWeather.Setup
 {
     public class Settings
     {
