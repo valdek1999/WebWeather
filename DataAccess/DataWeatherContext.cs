@@ -6,10 +6,13 @@ namespace WebWeather.DataAccess
     public class DataWeatherContext: DbContext
     {
         public DbSet<Weather> Weather { get; set; } = null!;
-        public DataWeatherContext(DbContextOptions<DataWeatherContext> options)
+        public DataWeatherContext(DbContextOptions<DataWeatherContext> options, bool isCreatingOfMigration = false)
             : base(options)
         {
-            Database.EnsureCreated();
+            if (!isCreatingOfMigration)
+            {
+                Database.Migrate();
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

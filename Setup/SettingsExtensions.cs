@@ -15,8 +15,7 @@ namespace WebWeather.Setup
                 .AddEnvironmentVariables()
                 .Build();
 
-            char[] charSeparators = new char[] { ';' };
-            //TODO: добавить более гибкую конфигурацию приложения
+            config.Bind(settings);
         }
     }
 }

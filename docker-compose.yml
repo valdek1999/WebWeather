@@ -17,6 +17,8 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro   
+    depends_on:
+     - postgres
   postgres:
     build:
         context: ./Images/postgres
